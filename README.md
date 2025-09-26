@@ -2,7 +2,7 @@
 
 `vite` is a lightweight and efficient vi-style text editor implemented in C. It is designed to run on various operating systems, including Windows, Linux, and macOS.
 
-![vite]()
+![vite](https://github.com/user-attachments/assets/f949a989-7a08-4422-97d2-90f42820cf0e)
 
 
 ## Main Features
