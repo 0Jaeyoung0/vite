@@ -230,16 +230,16 @@ void Open_File(Editor *editor, int argc, char *argv)
     
     FILE *fp = fopen(argv, "r");
 
-    if(fp == NULL)//파일이 존재하지 않는다면
+    if(fp == NULL)
     {
         fputs("File does not exist.\n", stderr);
         exit(1);
     }
 
-    editor -> filename = argv;//현재 열린 파일의 이름을 저장
+    editor -> filename = argv;
 
     char fpc;
-    while((fpc = fgetc(fp)) != EOF)//파일의 문자들을 리스트에 저장
+    while((fpc = fgetc(fp)) != EOF)
     {
         if(fpc == 10)
         {
@@ -272,7 +272,7 @@ void Open_File(Editor *editor, int argc, char *argv)
 
 void SaveFile(Editor *editor)
 {
-    /*파일 이름 입력*/
+    /*占쏙옙占쏙옙 占싱몌옙 占쌉뤄옙*/
     if(editor -> filename == NULL)
     {
         PrintMessageBar(editor, "Filename (Enter/Ctrl-q):");
@@ -285,7 +285,7 @@ void SaveFile(Editor *editor)
         while(1)
         {
             cc = ReadKey();
-            if((cc >= 32 && cc <= 126) && cc != 47)// '/'를 제외한 문자
+            if((cc >= 32 && cc <= 126) && cc != 47)
             {
                 if(temp_editor.node_row -> num_char >= (editor -> console_width - length - 1))
                     continue;
@@ -325,7 +325,7 @@ void SaveFile(Editor *editor)
             }
             else if(cc == ENTER)
             {
-                if(temp_editor.node_row -> str == NULL)//아무 글자도 입력하지 않으면 종료
+                if(temp_editor.node_row -> str == NULL)
                 {
                     PrintMessageBar(editor, "File has not been saved");
                     MoveCursor(editor);
@@ -353,7 +353,6 @@ void SaveFile(Editor *editor)
         }
     }
 
-    /*파일 내용 저장*/
     FILE *fp = fopen(editor -> filename, "w");
 
     RowNode *temp1 = editor -> print_head;
@@ -385,24 +384,24 @@ void SaveFile(Editor *editor)
 
 void InsertChar(Editor *editor, char c)
 {
-    CharNode *temp = GetNewCharNode(c);//새 문자 노드를 생성
+    CharNode *temp = GetNewCharNode(c);
 
-    if(editor -> node_row -> str == NULL)//행이 비어있을 경우
+    if(editor -> node_row -> str == NULL)
     {
         editor -> node_row -> str = temp;
     }
-    else if(editor -> node_col == NULL)//커서가 맨 앞에 있을 경우
+    else if(editor -> node_col == NULL)
     {
         temp -> next = editor -> node_row -> str;
         editor -> node_row -> str -> prev = temp;
         editor -> node_row -> str = temp;
     }
-    else if(editor -> node_col -> next == NULL)//커서가 맨 뒤에 있을 경우
+    else if(editor -> node_col -> next == NULL)
     {
         temp -> prev = editor -> node_col;
         editor -> node_col -> next = temp;
     }
-    else//커서가 중간에 있을 경우
+    else
     {
         temp -> next = editor -> node_col -> next;
         temp -> prev = editor -> node_col;
@@ -410,21 +409,21 @@ void InsertChar(Editor *editor, char c)
         editor -> node_col -> next = temp;
     }
 
-    editor -> node_col = temp;         //포인터 이동
-    editor -> node_x++;                //포인터 좌표값 변경
-    editor -> cursor_col++;            //커서 좌표값 변경
-    editor -> node_row -> num_char++;  //문자 수 증가
+    editor -> node_col = temp;         
+    editor -> node_x++;
+    editor -> cursor_col++;
+    editor -> node_row -> num_char++;
     editor -> right_move_distance = editor -> cursor_col;
-    editor -> is_saved = 0;            //저장상태 변경
+    editor -> is_saved = 0;
 }
 
 void DeleteChar(Editor *editor)
 {
-    CharNode *temp = editor -> node_col;//커서가 가리키고 있는 문자 노드의 주소
+    CharNode *temp = editor -> node_col;
 
-    if(editor -> node_col == NULL)//커서가 맨 앞에 있을 경우
+    if(editor -> node_col == NULL)
         return;
-    else if(editor -> node_col == editor -> node_row -> str)//첫번째 문자를 삭제할 경우
+    else if(editor -> node_col == editor -> node_row -> str)
     {
         if(editor -> node_col -> next == NULL)
             editor -> node_row -> str = NULL;
@@ -433,33 +432,33 @@ void DeleteChar(Editor *editor)
             editor -> node_row -> str = temp -> next;
             temp -> next -> prev = NULL;
         }
-        editor -> node_col = NULL;//포인터 이동
+        editor -> node_col = NULL;
     }
-    else if(editor -> node_col -> next == NULL)//커서가 맨 뒤에 있을 경우
+    else if(editor -> node_col -> next == NULL)
     {
-        editor -> node_col = editor -> node_col -> prev;//포인터 이동
+        editor -> node_col = editor -> node_col -> prev;
         temp -> prev -> next = NULL;
     }
-    else//커서가 중간에 있을 경우
+    else
     {
-        editor -> node_col = editor -> node_col -> prev;//포인터 이동
+        editor -> node_col = editor -> node_col -> prev;
         temp -> next -> prev = temp -> prev;
         temp -> prev -> next = temp -> next;
     }
 
     free(temp);
-    editor -> node_x--;               //포인터 좌표값 변경
-    editor -> cursor_col--;           //커서 좌표값 변경
-    editor -> node_row -> num_char--; //문자 수 감소
+    editor -> node_x--;               
+    editor -> cursor_col--;           
+    editor -> node_row -> num_char--;
     editor -> right_move_distance = editor -> cursor_col;
-    editor -> is_saved = 0;           //저장상태 변경
+    editor -> is_saved = 0;
 }
 
 void InsertRow(Editor *editor)
 {
-    RowNode *temp = GetNewRowNode();//새 행 노드를 생성
+    RowNode *temp = GetNewRowNode();
 
-    if(editor -> node_row -> next == NULL)//마지막 행인 경우
+    if(editor -> node_row -> next == NULL)
     {
         temp -> prev = editor -> node_row;
         editor -> node_row -> next = temp;
@@ -472,54 +471,54 @@ void InsertRow(Editor *editor)
         editor -> node_row -> next = temp;
     }
 
-    editor -> node_row = editor -> node_row -> next;//포인터 이동
-    editor -> node_y++;                             //포인터 좌표값 변경
-    editor -> cursor_row++;                         //커서 좌표값 변경
-    editor -> num_lines++;                          //전체 라인 수 증가
-    editor -> is_saved = 0;                         //저장상태 변경
+    editor -> node_row = editor -> node_row -> next;
+    editor -> node_y++;
+    editor -> cursor_row++;
+    editor -> num_lines++;
+    editor -> is_saved = 0;
 }
 
 void DeleteRow(Editor *editor)
 {
-    RowNode *temp = editor -> node_row;//커서가 가리키고 있는 행 노드의 주소
+    RowNode *temp = editor -> node_row;
 
-    if(editor -> node_row -> prev == NULL)//첫번째 행인 경우
+    if(editor -> node_row -> prev == NULL)
         return;
-    else if(editor -> node_row -> next == NULL)//마지막 행인 경우
+    else if(editor -> node_row -> next == NULL)
     {
-        editor -> node_row = editor -> node_row -> prev;//포인터 이동
+        editor -> node_row = editor -> node_row -> prev;
         temp -> prev -> next = NULL;
     }
     else
     {
-        editor -> node_row = editor -> node_row -> prev;//포인터 이동
+        editor -> node_row = editor -> node_row -> prev;
         temp -> next -> prev = temp -> prev;
         temp -> prev -> next = temp -> next;
     }
 
     free(temp);
-    editor -> node_y--;     //포인터 좌표값 변경
-    editor -> cursor_row--; //커서 좌표값 변경
-    editor -> num_lines--;  //전체 라인 수 감소
-    editor -> is_saved = 0; //저장상태 변경
+    editor -> node_y--;
+    editor -> cursor_row--;
+    editor -> num_lines--;
+    editor -> is_saved = 0;
 }
 
 void SplitLine(Editor *editor)
 {
     int n = editor -> cursor_col;
 
-    if(editor -> node_col == NULL)//커서가 맨 앞에 있을 경우
+    if(editor -> node_col == NULL)
     {
         editor -> node_row -> str = editor -> node_row -> prev -> str;
         editor -> node_row -> prev -> str = NULL;
     }
-    else if(editor -> node_col -> next == NULL)//커서가 맨 뒤에 있을 경우
+    else if(editor -> node_col -> next == NULL)
     {
         editor -> node_col = NULL;
         editor -> node_x = 1;
         editor -> cursor_col = 1;
     }
-    else//커서가 중간에 있을 경우
+    else
     {
         editor -> node_row -> str = editor -> node_col -> next;
         editor -> node_col -> next -> prev = NULL;
@@ -530,22 +529,21 @@ void SplitLine(Editor *editor)
     }
 
     editor -> right_move_distance = editor -> cursor_col;
-    //num_char 업데이트
     editor -> node_row -> num_char = editor -> node_row -> prev -> num_char - (n - 1);
     editor -> node_row -> prev -> num_char = n - 1;
 }
 
 void MergeLine(Editor *editor)
 {
-    if(editor -> node_row -> prev == NULL)//현재 행이 첫번째 행인 경우
+    if(editor -> node_row -> prev == NULL)
         return;
-    else if(editor -> node_row -> prev -> str == NULL)//이전 행이 비어있는 경우
+    else if(editor -> node_row -> prev -> str == NULL)
     {
         editor -> node_col = NULL;
         editor -> node_x = 1;
         editor -> cursor_col = 1;
 
-        if(editor -> node_row -> str != NULL)//현재 행이 비어있는 경우
+        if(editor -> node_row -> str != NULL)
             editor -> node_row -> prev -> str = editor -> node_row -> str;
     }
     else
@@ -560,7 +558,7 @@ void MergeLine(Editor *editor)
             editor -> cursor_col++;
         }
         
-        if(editor -> node_row -> str != NULL)//현재 행이 비어있는 경우
+        if(editor -> node_row -> str != NULL)
         {
             editor -> node_col -> next = editor -> node_row -> str;
             editor -> node_col -> next -> prev = editor -> node_col;
@@ -569,17 +567,16 @@ void MergeLine(Editor *editor)
     }
 
     editor -> right_move_distance = editor -> cursor_col;
-    //num_char 업데이트
     editor -> node_row -> prev -> num_char += editor -> node_row -> num_char;
 }
 
 void MovePointerLeft(Editor *editor)
 {
-    if(editor -> node_col == NULL)//커서가 맨 앞일 경우
+    if(editor -> node_col == NULL)
     {
-        if(editor -> node_row -> prev == NULL)//현재 위치가 첫번째 행일 경우
+        if(editor -> node_row -> prev == NULL)
             return;
-        else if(editor -> node_row -> prev -> str == NULL)//전 행이 비었을 경우
+        else if(editor -> node_row -> prev -> str == NULL)
         {
             editor -> node_row = editor -> node_row -> prev;
             editor -> node_y--;
@@ -587,7 +584,6 @@ void MovePointerLeft(Editor *editor)
         }
         else
         {
-            /*전 행의 맨 끝으로 이동*/
             editor -> node_row = editor -> node_row -> prev;
             editor -> node_y--;
             editor -> cursor_row--;
@@ -615,19 +611,18 @@ void MovePointerLeft(Editor *editor)
 
 void MovePointerRight(Editor *editor)
 {
-    if(editor -> node_row -> str != NULL && editor -> node_col == NULL)//커서가 맨 앞일 경우
+    if(editor -> node_row -> str != NULL && editor -> node_col == NULL)
     {
         editor -> node_x++;
         editor -> cursor_col++;
         editor -> node_col = editor -> node_row -> str;
     }
-    else if(editor -> node_row -> str == NULL || editor -> node_col -> next == NULL)//행이 비었거나 커서가 맨 뒤에 있는 경우
+    else if(editor -> node_row -> str == NULL || editor -> node_col -> next == NULL)
     {
-        if(editor -> node_row -> next == NULL)//마지막 행일 경우
+        if(editor -> node_row -> next == NULL)
             return;
         else
         {
-            /*다음 행의 맨 앞으로 이동*/
             editor -> node_row = editor -> node_row -> next;
             editor -> node_y++;
             editor -> cursor_row++;
@@ -648,15 +643,13 @@ void MovePointerRight(Editor *editor)
 
 void MovePointerUp(Editor *editor)
 {
-    if(editor -> node_row -> prev == NULL)//전 행이 없을 경우
+    if(editor -> node_row -> prev == NULL)
         return;
 
-    /*전 행의 맨 앞으로 이동*/
     editor -> node_row = editor -> node_row -> prev;
     editor -> node_y--;
     editor -> cursor_row--;
 
-    /*right_move_distance만큼 오른쪽으로 이동*/
     if(editor -> node_row -> str == NULL || editor -> right_move_distance == 1)
     {
         editor -> node_col = NULL;
@@ -685,12 +678,10 @@ void MovePointerDown(Editor *editor)
     if(editor -> node_row -> next == NULL)
         return;
 
-    /*다음 행의 맨 앞으로 이동*/
     editor -> node_row = editor -> node_row -> next;
     editor -> node_y++;
     editor -> cursor_row++;
 
-    /*right_move_distance만큼 오른쪽으로 이동*/
     if(editor -> node_row -> str == NULL || editor -> right_move_distance == 1)
     {
         editor -> node_col = NULL;
@@ -748,7 +739,6 @@ void MovePointerPgUp(Editor *editor)
 {
     if(editor -> cursor_row == 1)
     {
-        /*일정 범위만큼 print_head포인터 이동*/
         int i;
         for(i = 0; i < (editor -> console_height - 4); i++)
         {
@@ -764,7 +754,6 @@ void MovePointerPgUp(Editor *editor)
     }
     else
     {
-        /*첫번째 행으로 이동*/
         while(editor -> cursor_row != 1)
             MovePointerUp(editor);
     }
@@ -801,7 +790,7 @@ void MovePointerPgDn(Editor *editor)
 
 void ExitEditor(Editor *editor)
 {
-    if(editor -> is_saved == 0)//저장되지 않은 상태
+    if(editor -> is_saved == 0)
     {
         PrintMessageBar(editor, "!!WARNING!! File has not been saved. Ctrl-q to quit without saving.");
 
@@ -819,7 +808,6 @@ void ExitEditor(Editor *editor)
         }
         else
         {
-            /*에디터가 전의 상태로 돌아간다.*/
             PrintMessageBar(editor, "Help: Ctrl-s = save | Ctrl-q = quit | Ctrl-f = find");
             MoveCursor(editor);
             return;
@@ -840,7 +828,6 @@ void Search(Editor *editor)
     InitEditor(&temp_editor);
     int length = strlen("Search (Enter/Ctrl-q):");
 
-    /*      문자열 입력       */
     int cc;
     while(1)
     {
@@ -885,7 +872,7 @@ void Search(Editor *editor)
         }
         else if(cc == ENTER)
         {
-            if(temp_editor.node_row -> str == NULL)//아무 글자도 입력하지 않으면 그냥 종료
+            if(temp_editor.node_row -> str == NULL)
             {
                 PrintMessageBar(editor, "Help: Ctrl-s = save | Ctrl-q = quit | Ctrl-f = find");
                 MoveCursor(editor);
@@ -899,9 +886,9 @@ void Search(Editor *editor)
         printf("\033[%d;%dH", editor -> console_height, temp_editor.cursor_col + length);
     }
 
-    Editor origin_editor = *editor;//탐색을 시작하기 전의 현재상태 저장
+    Editor origin_editor = *editor;
 
-    while(editor -> print_head -> prev != NULL)//텍스트의 맨 처음으로 이동
+    while(editor -> print_head -> prev != NULL)
         editor -> print_head = editor -> print_head -> prev;
     editor -> node_row = editor -> print_head;
     editor -> node_col = NULL;
@@ -910,9 +897,8 @@ void Search(Editor *editor)
     editor -> cursor_row = 1;
     editor -> cursor_col = 1;
 
-    /*      문자열 탐색       */
     int count = 0;
-    Editor *editor_state = (Editor *)malloc(sizeof(Editor) * 100);//에디터의 현재상태를 저장하기 위한 배열
+    Editor *editor_state = (Editor *)malloc(sizeof(Editor) * 100);
     while(1)
     {
         MovePointerRight(editor);
@@ -966,9 +952,9 @@ void Search(Editor *editor)
         PrintStatusBar(editor);
         MoveCursor(editor);
 
-        printf("\033[7m");//반전색
+        printf("\033[7m");
         PrintRowText(temp_editor.node_row -> str);
-        printf("\033[0m\n");//스타일 초기화
+        printf("\033[0m\n");
         MoveCursor(editor);
     }
     else
@@ -979,7 +965,6 @@ void Search(Editor *editor)
         return;
     }
 
-    /*      키 입력 별 작업 수행       */
     int max_count = count;
     count = 0;
     while(1)
@@ -1025,7 +1010,7 @@ void Search(Editor *editor)
         }
         else if(cc == CTRL_Q)
         {
-            *editor = origin_editor;//탐색 전의 상태로 이동
+            *editor = origin_editor;
 
             ClearText(editor, 1);
 
@@ -1048,9 +1033,9 @@ void Search(Editor *editor)
         PrintStatusBar(editor);
         MoveCursor(editor);
 
-        printf("\033[7m");//반전색
+        printf("\033[7m");
         PrintRowText(temp_editor.node_row -> str);
-        printf("\033[0m");//스타일 초기화
+        printf("\033[0m");
         MoveCursor(editor);
     }
 }
@@ -1074,7 +1059,7 @@ void MoveCursor(Editor *editor)
     printf("\033[%d;%dH", editor -> cursor_row, editor -> cursor_col);
 }
 
-void PrintText(Editor *editor, RowNode *print_head, int row)//특정 행부터 전체 출력
+void PrintText(Editor *editor, RowNode *print_head, int row)
 {
     printf("\033[%d;1H", row);
     CharNode *temp;
@@ -1097,7 +1082,7 @@ void PrintText(Editor *editor, RowNode *print_head, int row)//특정 행부터 전체 �
     }
 }
 
-void PrintRowText(CharNode *temp)//특정 열부터 출력
+void PrintRowText(CharNode *temp)
 {
     while(temp != NULL)
     {
@@ -1106,7 +1091,7 @@ void PrintRowText(CharNode *temp)//특정 열부터 출력
     }
 }
 
-void ClearText(Editor *editor, int row)//특정 행부터 전체 지우기
+void ClearText(Editor *editor, int row)/
 {
     int i;
     for(i = row; i <= editor -> console_height - 2; i++)
@@ -1132,17 +1117,17 @@ void PrintStatusBar(Editor *editor)
         snprintf(statusbar, editor -> console_width + 1, "[%s] - %d lines%*sno ft | %d/%d", editor -> filename, editor -> num_lines, remaining_space, "", editor -> node_y, editor -> node_x);
     }
 
-    printf("\033[%d;1H", editor -> console_height - 1);//마지막에서 두번째 줄로 이동
-    printf("\033[7m");//반전색
+    printf("\033[%d;1H", editor -> console_height - 1);
+    printf("\033[7m");
     printf("%s", statusbar);
-    printf("\033[0m");//스타일 초기화
+    printf("\033[0m");
     free(statusbar);
 }
 
 void PrintMessageBar(Editor *editor, char *string)
 {
     printf("\033[%d;1H", editor -> console_height);
-    printf("\033[K");//현재 커서위치부터 한 행 지우기
+    printf("\033[K");
     printf("%s", string);
 }
 
@@ -1203,7 +1188,7 @@ void EditorKeyProcess(Editor *editor)
 {
     int c = ReadKey();
 
-    if(c >= 32 && c <= 126)//문자와 스페이스바
+    if(c >= 32 && c <= 126)
     {
         //
         if(editor -> cursor_col >= editor -> console_width)
