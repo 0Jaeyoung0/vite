@@ -272,7 +272,6 @@ void Open_File(Editor *editor, int argc, char *argv)
 
 void SaveFile(Editor *editor)
 {
-    /*���� �̸� �Է�*/
     if(editor -> filename == NULL)
     {
         PrintMessageBar(editor, "Filename (Enter/Ctrl-q):");
@@ -1091,7 +1090,7 @@ void PrintRowText(CharNode *temp)
     }
 }
 
-void ClearText(Editor *editor, int row)/
+void ClearText(Editor *editor, int row)
 {
     int i;
     for(i = row; i <= editor -> console_height - 2; i++)
